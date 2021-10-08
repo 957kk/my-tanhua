@@ -15,7 +15,6 @@ public class UUIDUtils {
 
     /**
      * 获取32位uuid生成数；
-     *
      * @return
      */
     public static String getUUID32() {
@@ -30,7 +29,8 @@ public class UUIDUtils {
      */
     public static Integer getUUIDInOrderId() {
         Integer orderId = UUID.randomUUID().toString().hashCode();
-        orderId = orderId < 0 ? -orderId : orderId; //String.hashCode() 值会为空
+        //String.hashCode() 值会为空
+        orderId = orderId < 0 ? -orderId : orderId;
         return orderId;
     }
 
