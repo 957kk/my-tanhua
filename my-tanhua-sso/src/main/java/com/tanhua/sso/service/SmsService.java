@@ -1,6 +1,6 @@
 package com.tanhua.sso.service;
 
-import com.tanhua.sso.vo.ErrorResult;
+import com.tanhua.sso.vo.ResultInfo;
 
 /**
  * @program: my-tanhua
@@ -9,5 +9,5 @@ import com.tanhua.sso.vo.ErrorResult;
  * @Create: 2021-10-08 09:25
  **/
 public interface SmsService {
-    ErrorResult sendCheckCode(String phone);
+    ResultInfo sendCheckCode(String phone);
 }
