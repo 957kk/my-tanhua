@@ -63,9 +63,9 @@ public class PicUploadUtils {
         if (!isLegal) {
             return PicUploadResult.builder().status("error").code("300000").response("上传图片格式不支持").build();
         }
-        long max = 1048576L;
+        long max = 2*1048576L;
         if (size > max) {
-            return PicUploadResult.builder().status("error").code("300005").response("文件为空").build();
+            return PicUploadResult.builder().status("error").code("300005").response("图片过大").build();
         }
 
         String filePath = getFilePath(originalFilename);

@@ -42,9 +42,16 @@ public class UserServiceImpl implements UserService {
         String code = map.get("code");
         String redisKey = "CHECK_CODE_" + phone;
         boolean isNew = false;
-        if (!redisTemplate.hasKey(redisKey)) {
+        if(!redisTemplate.hasKey(redisKey)){
+            return ResultInfo.builder().code("100002").message("验证码已失效").build();
+        }
+
+        String redisData = this.redisTemplate.opsForValue().get(redisKey);
+        System.out.println(redisData);
+        if (!code.equals(redisData)) {
             return ResultInfo.builder().code("100000").message("验证码错误").build();
         }
+        redisTemplate.delete(redisKey);
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq("mobile", phone);
         User user = userMapper.selectOne(wrapper);
