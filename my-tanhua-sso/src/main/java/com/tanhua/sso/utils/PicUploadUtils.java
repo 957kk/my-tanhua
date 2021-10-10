@@ -6,6 +6,7 @@ import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,14 +25,12 @@ public class PicUploadUtils {
     private static String accessKeySecret;
     private static String bucketName;
     private static String urlPrefix;
+
     /**
      * 允许上传的格式
      */
 
-    private PicUploadUtils(){}
-    private static final String[] IMAGE_TYPE = new String[]{".bmp", ".jpg",
-            ".jpeg", ".gif", ".png"};
-    public static PicUploadResult picUpload(MultipartFile uploadFile) {
+    static {
         try {
             InputStream inputStream = PicUploadUtils.class.getClassLoader().getResourceAsStream("aliyun.properties");
             Properties properties = new Properties();
@@ -44,6 +43,15 @@ public class PicUploadUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private PicUploadUtils() {
+    }
+
+    private static final String[] IMAGE_TYPE = new String[]{".bmp", ".jpg",
+            ".jpeg", ".gif", ".png"};
+
+    public static PicUploadResult picUpload(MultipartFile uploadFile) {
         if (null == uploadFile) {
             return PicUploadResult.builder().status("error").code("300004").response("文件为空").build();
         }
@@ -63,7 +71,7 @@ public class PicUploadUtils {
         if (!isLegal) {
             return PicUploadResult.builder().status("error").code("300000").response("上传图片格式不支持").build();
         }
-        long max = 2*1048576L;
+        long max = 2 * 1048576L;
         if (size > max) {
             return PicUploadResult.builder().status("error").code("300005").response("图片过大").build();
         }
@@ -81,7 +89,7 @@ public class PicUploadUtils {
             return PicUploadResult.builder().status("error").code("300001").response("上传失败").build();
         }
         return PicUploadResult.builder()
-                .name(urlPrefix+filePath)
+                .name(urlPrefix + filePath)
                 .uid(String.valueOf(System.currentTimeMillis()))
                 .status("success")
                 .code("300006")
@@ -90,6 +98,7 @@ public class PicUploadUtils {
 
     /**
      * 获取阿里云oss路径
+     *
      * @param sourceFileName
      * @return
      */

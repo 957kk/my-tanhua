@@ -8,12 +8,14 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="my-tanhua-sso" />
+        <module name="my-tanhua-server" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="8" />
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="my-tanhua-server" options="-parameters" />
       <module name="my-tanhua-sso" options="-parameters" />
     </option>
   </component>

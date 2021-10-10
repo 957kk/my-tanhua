@@ -13,8 +13,6 @@ import java.util.Date;
 @NoArgsConstructor
 @Slf4j
 @Builder
-//@Setter
-//@Getter
 public class Item {
 
     private Long id;

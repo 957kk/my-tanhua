@@ -2,12 +2,14 @@ package com.tanhua.sso.pojo;
 
 import com.tanhua.sso.enums.SexEnum;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UserInfo extends BasePojo {
 
     private Long id;

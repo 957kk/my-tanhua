@@ -5,13 +5,12 @@ import com.tanhua.sso.mapper.UserMapper;
 import com.tanhua.sso.pojo.User;
 import com.tanhua.sso.service.UserService;
 import com.tanhua.sso.utils.PicUploadUtils;
+import com.tanhua.sso.utils.TokenUtils;
 import com.tanhua.sso.vo.PicUploadResult;
 import com.tanhua.sso.vo.ResultInfo;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,12 +21,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
+
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
@@ -42,7 +43,7 @@ public class UserServiceImpl implements UserService {
         String code = map.get("code");
         String redisKey = "CHECK_CODE_" + phone;
         boolean isNew = false;
-        if(!redisTemplate.hasKey(redisKey)){
+        if (!redisTemplate.hasKey(redisKey)) {
             return ResultInfo.builder().code("100002").message("验证码已失效").build();
         }
 
@@ -67,18 +68,10 @@ public class UserServiceImpl implements UserService {
         Map<String, Object> claims = new HashMap<String, Object>();
         claims.put("id", user.getId());
         // 生成token
-        String token = Jwts.builder()
-                //payload，存放数据的位置，不能放置敏感数据，如：密码等
-                .setClaims(claims)
-                //设置加密方法和加密盐
-                .signWith(SignatureAlgorithm.HS256, secret)
-                //设置过期时间，12小时后过期
-                .setExpiration(new DateTime().plusHours(12).toDate())
-                .compact();
-
+        String token = TokenUtils.buildToken(secret, claims);
         try {
             //发送用户登录成功的消息
-            Map<String,Object> msg = new HashMap<>();
+            Map<String, Object> msg = new HashMap<>();
             msg.put("id", user.getId());
             msg.put("date", System.currentTimeMillis());
 
@@ -88,8 +81,8 @@ public class UserServiceImpl implements UserService {
         }
 
         HashMap<String, Object> tokenMap = new HashMap<>();
-        tokenMap.put("token",token);
-        tokenMap.put("isNew",isNew);
+        tokenMap.put("token", token);
+        tokenMap.put("isNew", isNew);
         return ResultInfo.builder().code("100001").message("登陆成功").object(tokenMap).build();
     }
 
@@ -97,4 +90,33 @@ public class UserServiceImpl implements UserService {
     public PicUploadResult picUpload(MultipartFile multipartFile) {
         return PicUploadUtils.picUpload(multipartFile);
     }
+
+    @Override
+    public User queryUserByToken(String token) {
+        try {
+            Map<String, Object> body = TokenUtils.parseToken(secret, token);
+            User user = new User();
+            user.setId(Long.valueOf(body.get("id").toString()));
+            String redisKey = "TANHUA_USER_MOBILE_" + user.getId();
+            //需要返回user对象中的mobile，需要查询数据库获取到mobile数据
+            //如果每次都查询数据库，必然会导致性能问题，需要对用户的手机号进行缓存操作
+            //数据缓存时，需要设置过期时间，过期时间要与token的时间一致
+            //如果用户修改了手机号，需要同步修改redis中的数据
+            if (redisTemplate.hasKey(redisKey)) {
+                String mobile = redisTemplate.opsForValue().get(redisKey);
+                user.setMobile(mobile);
+            } else {
+                User u = userMapper.selectById(user.getId());
+                long timeout = Long.parseLong(body.get("exp").toString()) * 1000 - System.currentTimeMillis();
+                this.redisTemplate.opsForValue().set(redisKey, u.getMobile(), timeout, TimeUnit.MILLISECONDS);
+            }
+            return user;
+        } catch (ExpiredJwtException e) {
+            log.info("token已经过期！ token = " + token,e);
+        } catch (Exception e) {
+            log.error("token不合法！ token = "+ token, e);
+        }
+        return null;
+    }
+
 }
