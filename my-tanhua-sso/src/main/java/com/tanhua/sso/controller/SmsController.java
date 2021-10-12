@@ -2,6 +2,7 @@ package com.tanhua.sso.controller;
 
 import com.tanhua.sso.service.SmsService;
 import com.tanhua.sso.vo.ResultInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import java.util.Map;
  **/
 @RestController
 @RequestMapping("user")
+@Slf4j
 public class SmsController {
 
     @Autowired
@@ -28,8 +30,13 @@ public class SmsController {
     @PostMapping("login")
     public ResponseEntity<ResultInfo> sendCheckCode(@RequestBody Map<String, String> param) {
         ResultInfo resultInfo = null;
-        String phone = param.get("phone");
-        resultInfo = smsService.sendCheckCode(phone);
+        try {
+            String phone = param.get("phone");
+            resultInfo = smsService.sendCheckCode(phone);
+        } catch (Exception e) {
+           log.error("出错误了，，，",e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
         return ResponseEntity.status(HttpStatus.OK).body(resultInfo);
     }
 }

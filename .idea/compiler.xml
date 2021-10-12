@@ -9,12 +9,17 @@
         <outputRelativeToContentRoot value="true" />
         <module name="my-tanhua-sso" />
         <module name="my-tanhua-server" />
+        <module name="my-tanhua-dubbo-service" />
+        <module name="my-tanhua-dubbo-interface" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="8" />
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="my-tanhua-dubbo" options="" />
+      <module name="my-tanhua-dubbo-interface" options="-parameters" />
+      <module name="my-tanhua-dubbo-service" options="-parameters" />
       <module name="my-tanhua-server" options="-parameters" />
       <module name="my-tanhua-sso" options="-parameters" />
     </option>

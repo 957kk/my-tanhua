@@ -93,6 +93,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User queryUserByToken(String token) {
+
         try {
             Map<String, Object> body = TokenUtils.parseToken(secret, token);
             User user = new User();

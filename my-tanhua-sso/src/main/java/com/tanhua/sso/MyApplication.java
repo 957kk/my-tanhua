@@ -4,7 +4,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@MapperScan("com.tanhua.sso.mapper") //设置mapper接口的扫描包
+@MapperScan("com.tanhua.sso.mapper")
 @SpringBootApplication
 public class MyApplication {
 
