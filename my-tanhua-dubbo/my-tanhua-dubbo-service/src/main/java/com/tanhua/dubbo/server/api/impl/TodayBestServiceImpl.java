@@ -65,6 +65,7 @@ public class TodayBestServiceImpl implements TodayBestService {
             todayBest.setFateValue(80L); //固定值
         }
 
+        System.out.println("abc");
         //补全个人信息
         UserInfo userInfo = this.userInfoService.queryUserInfoByUserId(todayBest.getId());
         if (null == userInfo) {
