@@ -1,9 +1,9 @@
-package com.tanhua.dubbo.server.api.impl;
+package com.tanhua.server.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.tanhua.common.mapper.UserInfoMapper;
 import com.tanhua.common.pojo.UserInfo;
-import com.tanhua.dubbo.server.api.UserInfoService;
+import com.tanhua.server.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

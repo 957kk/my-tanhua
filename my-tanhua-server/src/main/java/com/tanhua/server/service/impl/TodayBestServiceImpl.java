@@ -1,21 +1,23 @@
-package com.tanhua.dubbo.server.api.impl;
+package com.tanhua.server.service.impl;
 
-import com.alibaba.dubbo.config.annotation.Service;
+
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.tanhua.common.pojo.User;
 import com.tanhua.common.pojo.UserInfo;
 import com.tanhua.dubbo.server.api.RecommendUserApi;
-import com.tanhua.dubbo.server.api.TodayBestService;
-import com.tanhua.dubbo.server.api.UserInfoService;
-import com.tanhua.dubbo.server.api.UserService;
 import com.tanhua.dubbo.server.pojo.RecommendUser;
 import com.tanhua.dubbo.server.vo.PageInfo;
 import com.tanhua.dubbo.server.vo.PageResult;
 import com.tanhua.dubbo.server.vo.RecommendUserQueryParam;
 import com.tanhua.dubbo.server.vo.TodayBest;
+import com.tanhua.server.service.TodayBestService;
+import com.tanhua.server.service.UserInfoService;
+import com.tanhua.server.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
@@ -26,10 +28,10 @@ import java.util.*;
  * @author: xkZhao
  * @Create: 2021-10-11 20:41
  **/
-@Service(version = "1.0.0")
+@Service
 public class TodayBestServiceImpl implements TodayBestService {
 
-    @Autowired
+    @Reference(version = "1.0.0")
     private RecommendUserApi recommendUserApi;
     @Autowired
     private UserService userService;

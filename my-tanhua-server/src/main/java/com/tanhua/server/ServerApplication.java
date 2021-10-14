@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 
-@MapperScan("com.tanhua.server.mapper")
+@MapperScan("com.tanhua.common.mapper")
 @SpringBootApplication(exclude = {MongoAutoConfiguration.class, MongoDataAutoConfiguration.class})
 @DubboComponentScan(basePackages = "com.tanhua.dubbo.server")
 public class ServerApplication {

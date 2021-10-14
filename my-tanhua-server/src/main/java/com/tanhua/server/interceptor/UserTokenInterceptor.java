@@ -1,11 +1,11 @@
 package com.tanhua.server.interceptor;
 
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.tanhua.common.pojo.User;
 import com.tanhua.common.utils.NoAuthorization;
 import com.tanhua.common.utils.UserThreadLocal;
-import com.tanhua.dubbo.server.api.UserService;
+
+import com.tanhua.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class UserTokenInterceptor implements HandlerInterceptor {
 
-    @Reference(version = "1.0.0")
+   @Autowired
     private UserService userService;
 
     @Override

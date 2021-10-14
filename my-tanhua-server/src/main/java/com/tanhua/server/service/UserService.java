@@ -1,4 +1,4 @@
-package com.tanhua.dubbo.server.api;
+package com.tanhua.server.service;
 
 import com.tanhua.common.pojo.User;
 import org.springframework.stereotype.Service;

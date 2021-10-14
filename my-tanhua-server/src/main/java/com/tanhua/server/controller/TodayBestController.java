@@ -1,14 +1,14 @@
 package com.tanhua.server.controller;
 
-import com.alibaba.dubbo.config.annotation.Reference;
-import com.tanhua.dubbo.server.api.TodayBestService;
 import com.tanhua.dubbo.server.vo.PageResult;
 import com.tanhua.dubbo.server.vo.RecommendUserQueryParam;
 import com.tanhua.dubbo.server.vo.TodayBest;
 
 
+import com.tanhua.server.service.TodayBestService;
 import com.tanhua.server.utils.Cache;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class TodayBestController {
 
-    @Reference(version = "1.0.0")
+    @Autowired
     private TodayBestService todayBestService;
 
     /**

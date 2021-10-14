@@ -1,4 +1,4 @@
-package com.tanhua.dubbo.server.api;
+package com.tanhua.server.service;
 
 import com.tanhua.common.pojo.UserInfo;
 import com.tanhua.dubbo.server.pojo.Publish;

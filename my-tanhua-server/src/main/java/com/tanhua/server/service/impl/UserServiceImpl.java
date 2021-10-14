@@ -1,7 +1,7 @@
-package com.tanhua.dubbo.server.api.impl;
+package com.tanhua.server.service.impl;
 
 import com.tanhua.common.pojo.User;
-import com.tanhua.dubbo.server.api.UserService;
+import com.tanhua.server.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +19,6 @@ import java.util.Objects;
  **/
 @Slf4j
 @Service
-@com.alibaba.dubbo.config.annotation.Service(version = "1.0.0")
 public class UserServiceImpl implements UserService {
     @Autowired
     private RestTemplate restTemplate;

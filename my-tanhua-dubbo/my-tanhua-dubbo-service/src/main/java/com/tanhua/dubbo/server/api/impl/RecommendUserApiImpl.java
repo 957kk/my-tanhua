@@ -1,5 +1,6 @@
 package com.tanhua.dubbo.server.api.impl;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.tanhua.dubbo.server.api.RecommendUserApi;
 import com.tanhua.dubbo.server.pojo.RecommendUser;
 import com.tanhua.dubbo.server.vo.PageInfo;
@@ -10,7 +11,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +22,7 @@ import java.util.Objects;
  * @Create: 2021-10-11 19:45
  **/
 @Slf4j
-@Service
+@Service(version = "1.0.0")
 public class RecommendUserApiImpl implements RecommendUserApi {
     @Autowired
     private MongoTemplate mongoTemplate;
