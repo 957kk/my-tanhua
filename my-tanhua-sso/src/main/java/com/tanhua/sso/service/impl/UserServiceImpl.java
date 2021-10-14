@@ -1,8 +1,8 @@
 package com.tanhua.sso.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.tanhua.sso.mapper.UserMapper;
-import com.tanhua.sso.pojo.User;
+import com.tanhua.common.mapper.UserMapper;
+import com.tanhua.common.pojo.User;
 import com.tanhua.sso.service.UserService;
 import com.tanhua.sso.utils.PicUploadUtils;
 import com.tanhua.sso.utils.TokenUtils;

@@ -20,6 +20,7 @@
         <module>my-tanhua-sso</module>
         <module>my-tanhua-server</module>
         <module>my-tanhua-dubbo</module>
+        <module>my-tanhua-common</module>
     </modules>
 
     <!-- 集中定义依赖版本号 -->
@@ -181,6 +182,11 @@
                 <!--<scope>system</scope>-->
                 <!--如果没有安装到本地仓库，可以将jar包拷贝到工程的lib下面下，直接引用-->
                 <!--<systemPath>${project.basedir}/lib/arcsoft-sdk-face-3.0.0.0.jar</systemPath>-->
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>5.5.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

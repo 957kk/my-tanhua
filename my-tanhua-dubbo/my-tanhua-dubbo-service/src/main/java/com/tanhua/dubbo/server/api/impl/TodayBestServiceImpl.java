@@ -1,15 +1,14 @@
 package com.tanhua.dubbo.server.api.impl;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.tanhua.common.pojo.User;
+import com.tanhua.common.pojo.UserInfo;
 import com.tanhua.dubbo.server.api.RecommendUserApi;
 import com.tanhua.dubbo.server.api.TodayBestService;
 import com.tanhua.dubbo.server.api.UserInfoService;
 import com.tanhua.dubbo.server.api.UserService;
 import com.tanhua.dubbo.server.pojo.RecommendUser;
-import com.tanhua.dubbo.server.pojo.User;
-import com.tanhua.dubbo.server.pojo.UserInfo;
 import com.tanhua.dubbo.server.vo.PageInfo;
 import com.tanhua.dubbo.server.vo.PageResult;
 import com.tanhua.dubbo.server.vo.RecommendUserQueryParam;

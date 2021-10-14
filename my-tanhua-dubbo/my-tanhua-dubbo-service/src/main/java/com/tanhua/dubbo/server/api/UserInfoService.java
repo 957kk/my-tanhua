@@ -1,7 +1,7 @@
 package com.tanhua.dubbo.server.api;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.tanhua.dubbo.server.pojo.UserInfo;
+import com.tanhua.common.pojo.UserInfo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,4 +16,6 @@ import java.util.List;
 public interface UserInfoService {
     UserInfo queryUserInfoByUserId(Long userId);
     List<UserInfo> queryUserInfoList(QueryWrapper<UserInfo> queryWrapper);
+
+    List<UserInfo> queryUserInfoByUserIdList(List<Object> userIds);
 }

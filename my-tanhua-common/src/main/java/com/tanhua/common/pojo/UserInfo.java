@@ -1,8 +1,8 @@
-package com.tanhua.dubbo.server.pojo;
+package com.tanhua.common.pojo;
 
-
-import com.tanhua.dubbo.server.enums.SexEnum;
+import com.tanhua.common.enums.SexEnum;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,8 +11,10 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UserInfo extends BasePojo implements Serializable {
     private static final long serialVersionUID = 362498820763181265L;
+
 
     private Long id;
     private Long userId; //用户id

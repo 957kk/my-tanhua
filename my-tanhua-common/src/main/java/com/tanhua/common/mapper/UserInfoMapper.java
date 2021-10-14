@@ -1,10 +1,8 @@
-package com.tanhua.sso.mapper;
+package com.tanhua.common.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.tanhua.sso.pojo.UserInfo;
-import org.apache.ibatis.annotations.Mapper;
+import com.tanhua.common.pojo.UserInfo;
 
-@Mapper
 public interface UserInfoMapper extends BaseMapper<UserInfo> {
 
 }

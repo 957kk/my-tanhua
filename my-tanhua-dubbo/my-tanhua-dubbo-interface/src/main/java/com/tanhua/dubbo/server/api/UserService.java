@@ -1,6 +1,6 @@
 package com.tanhua.dubbo.server.api;
 
-import com.tanhua.dubbo.server.pojo.User;
+import com.tanhua.common.pojo.User;
 import org.springframework.stereotype.Service;
 
 /**
