@@ -41,4 +41,14 @@ public interface QuanZiService {
     Long likeComment(String publishId);
 
     Long disLikeComment(String publishId);
+
+    QuanZiVo queryById(String publishId);
+
+    Long loveComment(String publishId);
+
+    Long disLoveComment(String publishId);
+
+    PageResult queryCommentList(String publishId, Integer page, Integer pageSize);
+
+    Boolean saveComments(String publishId, String content);
 }

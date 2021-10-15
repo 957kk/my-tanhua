@@ -2,6 +2,9 @@ package com.tanhua.server.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.tanhua.common.pojo.User;
 import com.tanhua.common.pojo.UserInfo;
@@ -9,7 +12,9 @@ import com.tanhua.common.utils.RelativeDateFormat;
 import com.tanhua.common.utils.UserThreadLocal;
 import com.tanhua.dubbo.server.api.QuanZiApi;
 import com.tanhua.dubbo.server.enums.CommentType;
+import com.tanhua.dubbo.server.pojo.Comment;
 import com.tanhua.dubbo.server.pojo.Publish;
+import com.tanhua.dubbo.server.vo.CommentVo;
 import com.tanhua.dubbo.server.vo.PageInfo;
 import com.tanhua.dubbo.server.vo.PageResult;
 import com.tanhua.dubbo.server.vo.QuanZiVo;
@@ -22,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -213,4 +219,110 @@ public class QuanZiServiceImpl implements QuanZiService {
         }
         return null;
     }
+
+    @Override
+    public Long loveComment(String publishId) {
+        User user = UserThreadLocal.get();
+        //喜欢
+        Boolean result = this.quanZiApi.loveComment(user.getId(), publishId);
+        if(result){
+            //查询喜欢数
+            return this.quanZiApi.queryCount(publishId,CommentType.LOVE);
+        }
+        return null;
+    }
+
+    @Override
+    public Long disLoveComment(String publishId) {
+        User user = UserThreadLocal.get();
+        //取消喜欢
+        Boolean result = this.quanZiApi.disLoveComment(user.getId(), publishId);
+        if(result){
+            //查询喜欢数
+            return this.quanZiApi.queryCount(publishId,CommentType.LOVE);
+        }
+        return null;
+    }
+
+
+    /**
+     * 查询评论列表
+     *
+     * @param publishId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public PageResult queryCommentList(String publishId, Integer page, Integer pageSize) {
+
+        PageResult pageResult = new PageResult();
+        pageResult.setPage(page);
+        pageResult.setPagesize(pageSize);
+
+        User user = UserThreadLocal.get();
+
+        //查询评论列表数据
+        PageInfo<Comment> pageInfo = this.quanZiApi.queryCommentList(publishId, page, pageSize);
+        List<Comment> records = pageInfo.getRecords();
+        if(CollUtil.isEmpty(records)){
+            return pageResult;
+        }
+
+        //查询用户信息
+        List<Object> userIdList = CollUtil.getFieldValues(records, "userId");
+        List<UserInfo> userInfoList = this.userInfoService.queryUserInfoByUserIdList(userIdList);
+
+        List<CommentVo> result = new ArrayList<>();
+        for (Comment record : records) {
+            CommentVo commentVo = new CommentVo();
+            commentVo.setContent(record.getContent());
+            commentVo.setId(record.getId().toHexString());
+            commentVo.setCreateDate(DateUtil.format(new Date(record.getCreated()), "HH:mm"));
+            //是否点赞
+            commentVo.setHasLiked(this.quanZiApi.queryUserIsLike(user.getId(), commentVo.getId()) ? 1 : 0);
+            //点赞数
+            commentVo.setLikeCount(Convert.toInt(this.quanZiApi.queryCount(commentVo.getId(),CommentType.LIKE)));
+
+
+            for (UserInfo userInfo : userInfoList) {
+                if(ObjectUtil.equals(record.getUserId(), userInfo.getUserId())){
+
+                    commentVo.setAvatar(userInfo.getLogo());
+                    commentVo.setNickname(userInfo.getNickName());
+
+                    break;
+                }
+            }
+
+            result.add(commentVo);
+        }
+
+        pageResult.setItems(result);
+
+        return pageResult;
+    }
+
+    /**
+     * 发表评论
+     * @param publishId
+     * @param content
+     * @return
+     */
+    @Override
+    public Boolean saveComments(String publishId, String content) {
+        User user = UserThreadLocal.get();
+        return this.quanZiApi.saveComment(user.getId(), publishId, content);
+    }
+
+
+    @Override
+    public QuanZiVo queryById(String publishId) {
+        Publish publish = this.quanZiApi.queryPublishById(publishId);
+        if (publish == null) {
+            return null;
+        }
+        return this.fillQuanZiVo(Arrays.asList(publish)).get(0);
+    }
+
 }

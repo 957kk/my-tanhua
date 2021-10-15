@@ -65,4 +65,12 @@ public interface QuanZiApi {
     Boolean disLikeComment(Long userId, String publishId);
 
     Long queryCount(String publishId, CommentType commentType);
+
+    Boolean loveComment(Long id, String publishId);
+
+    Boolean disLoveComment(Long id, String publishId);
+
+    PageInfo<Comment> queryCommentList(String publishId, Integer page, Integer pageSize);
+
+    boolean queryUserIsLike(Long id, String id1);
 }

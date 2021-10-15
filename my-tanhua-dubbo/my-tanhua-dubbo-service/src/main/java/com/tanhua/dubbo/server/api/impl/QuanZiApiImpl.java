@@ -151,7 +151,6 @@ public class QuanZiApiImpl implements QuanZiApi {
         if (StrUtil.isEmpty(data)) {
             return pageInfo;
         }
-
         //查询到的pid进行分页处理
         List<String> pids = StrUtil.split(data, ',');
         //计算分页
@@ -159,6 +158,7 @@ public class QuanZiApiImpl implements QuanZiApi {
         int[] startEnd = PageUtil.transToStartEnd(page - 1, pageSize);
         int startIndex = startEnd[0]; //开始
         int endIndex = Math.min(startEnd[1], pids.size()); //结束
+
 
         List<Long> pidLongList = new ArrayList<>();
         for (int i = startIndex; i < endIndex; i++) {
@@ -180,6 +180,108 @@ public class QuanZiApiImpl implements QuanZiApi {
         }
 
         pageInfo.setRecords(publishList);
+        return pageInfo;
+    }
+
+
+    @Override
+    public Boolean loveComment(Long userId, String publishId) {
+        //查询该用户是否已经喜欢
+        if (this.queryUserIsLove(userId, publishId)) {
+            return false;
+        }
+
+        //喜欢
+        boolean result = this.saveComment(userId, publishId, CommentType.LOVE, null);
+        if (!result) {
+            return false;
+        }
+
+        //喜欢成功后，修改Redis中的总的喜欢数
+        String redisKey = this.getCommentRedisKeyPrefix(publishId);
+        String hashKey = CommentType.LOVE.toString();
+        this.redisTemplate.opsForHash().increment(redisKey, hashKey, 1);
+
+        //标记用户已经喜欢
+        hashKey = this.getCommentUserLoveRedisKey(userId);
+        this.redisTemplate.opsForHash().put(redisKey, hashKey, "1");
+
+        return true;
+    }
+
+    public Boolean queryUserIsLove(Long userId, String publishId) {
+        String redisKey = this.getCommentRedisKeyPrefix(publishId);
+        String hashKey = this.getCommentUserLoveRedisKey(userId);
+        Object value = this.redisTemplate.opsForHash().get(redisKey, hashKey);
+        if (ObjectUtil.isNotEmpty(value)) {
+            return StrUtil.equals(Convert.toStr(value), "1");
+        }
+
+        //查询mongodb
+        Query query = Query.query(Criteria.where("publishId")
+                .is(new ObjectId(publishId))
+                .and("userId").is(userId)
+                .and("commentType").is(CommentType.LOVE.getType()));
+        long count = this.mongoTemplate.count(query, Comment.class);
+        if (count == 0) {
+            return false;
+        }
+
+        //标记用户已经喜欢
+        this.redisTemplate.opsForHash().put(redisKey, hashKey, "1");
+
+        return true;
+    }
+
+    private String getCommentUserLoveRedisKey(Long userId) {
+        return COMMENT_USER_LOVE_REDIS_KEY_PREFIX + userId;
+    }
+
+    @Override
+    public Boolean disLoveComment(Long userId, String publishId) {
+        if (!this.queryUserIsLove(userId, publishId)) {
+            //如果用户没有喜欢，就直接返回
+            return false;
+        }
+
+        boolean result = this.removeComment(userId, publishId, CommentType.LOVE);
+        if (!result) {
+            //删除失败
+            return false;
+        }
+
+        //删除redis中的记录
+        String redisKey = this.getCommentRedisKeyPrefix(publishId);
+        String hashKey = this.getCommentUserLoveRedisKey(userId);
+        this.redisTemplate.opsForHash().delete(redisKey, hashKey);
+        this.redisTemplate.opsForHash().increment(redisKey, CommentType.LOVE.toString(), -1);
+
+        return true;
+    }
+
+    /**
+     * 查询评论列表（需要发布时间进行正序排序）
+     *
+     * @param publishId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public PageInfo<Comment> queryCommentList(String publishId, Integer page, Integer pageSize) {
+
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Order.asc("created")));
+
+        Query query = Query.query(Criteria.where("publishId").is(new ObjectId(publishId))
+                .and("commentType").is(CommentType.COMMENT.getType())
+        ).with(pageRequest);
+        List<Comment> commentList = this.mongoTemplate.find(query, Comment.class);
+
+        PageInfo<Comment> pageInfo = new PageInfo<>();
+        pageInfo.setPageSize(pageSize);
+        pageInfo.setPageNum(page);
+        pageInfo.setRecords(commentList);
+
         return pageInfo;
     }
 
@@ -379,7 +481,8 @@ public class QuanZiApiImpl implements QuanZiApi {
      * @param publishId
      * @return
      */
-    private boolean queryUserIsLike(Long userId, String publishId) {
+    @Override
+    public boolean queryUserIsLike(Long userId, String publishId) {
         //从redis中查询数据
         String redisKey = this.getCommentRedisKeyPrefix(publishId);
         String userHashKey = this.getCommentUserLikeRedisKeyPrefix(userId);
