@@ -6,11 +6,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class QuanZiVo {
+public class QuanZiVo implements Serializable {
+    private static final long serialVersionUID = -2105385689859184204L;
+
 
     private String id; //动态id
     private Long userId; //用户id

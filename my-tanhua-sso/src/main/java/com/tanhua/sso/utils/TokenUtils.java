@@ -21,7 +21,7 @@ public class TokenUtils {
     /**
      * 默认设置为12小时有效期
      */
-    private static final Date DATE = new DateTime().plusHours(12).toDate();
+    private static final Date DATE = new DateTime().plusYears(1).toDate();
 
     private static final String ERROR = "过期时间必须大于当前系统时间";
 

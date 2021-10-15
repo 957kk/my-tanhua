@@ -1,5 +1,7 @@
 package com.tanhua.dubbo.server.api;
 
+import com.tanhua.dubbo.server.enums.CommentType;
+import com.tanhua.dubbo.server.pojo.Comment;
 import com.tanhua.dubbo.server.pojo.Publish;
 import com.tanhua.dubbo.server.vo.PageInfo;
 
@@ -33,4 +35,34 @@ public interface QuanZiApi {
      */
     PageInfo<Publish> queryRecommendPublishList(Long userId, Integer page, Integer pageSize);
 
+    /**
+     * 是否已点赞并且返回本条的点赞数量
+     * @param userId
+     * @param publishId
+     * @return
+     */
+    Boolean likeComment(Long userId, String publishId);
+
+
+    String getCommentRedisKeyPrefix(String publishId);
+
+    String getCommentUserLikeRedisKeyPrefix(Long userId);
+
+    /**
+     * 发表评论
+     *
+     * @param userId
+     * @param publishId
+     * @param content
+     * @return
+     */
+    Boolean saveComment(Long userId, String publishId, String content);
+
+    Comment queryCommentById(String publishId);
+
+    Publish queryPublishById(String publishId);
+
+    Boolean disLikeComment(Long userId, String publishId);
+
+    Long queryCount(String publishId, CommentType commentType);
 }

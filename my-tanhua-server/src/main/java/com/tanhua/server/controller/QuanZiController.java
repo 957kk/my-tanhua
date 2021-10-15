@@ -1,7 +1,6 @@
 package com.tanhua.server.controller;
 
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.tanhua.dubbo.server.vo.PageResult;
 import com.tanhua.server.service.QuanZiService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +21,6 @@ public class QuanZiController {
 
    @Autowired
     private QuanZiService quanZiService;
-
-
     /**
      * 查询好友动态
      *
@@ -74,6 +71,47 @@ public class QuanZiController {
                                                 @RequestParam(value = "pagesize", defaultValue = "10") Integer pageSize) {
         return this.quanZiService.queryRecommendPublishList(page, pageSize);
     }
+
+    /**
+     * 点赞
+     *
+     * @param publishId
+     * @return
+     */
+    @GetMapping("/{id}/like")
+    public ResponseEntity<Long> likeComment(@PathVariable("id") String publishId) {
+        try {
+            Long likeCount = this.quanZiService.likeComment(publishId);
+            if (likeCount != null) {
+                return ResponseEntity.ok(likeCount);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    /**
+     * 取消点赞
+     *
+     * @param publishId
+     * @return
+     */
+    @GetMapping("/{id}/dislike")
+    public ResponseEntity<Long> disLikeComment(@PathVariable("id") String publishId) {
+        try {
+            Long likeCount = this.quanZiService.disLikeComment(publishId);
+            if (null != likeCount) {
+                return ResponseEntity.ok(likeCount);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+
+
 
 }
 

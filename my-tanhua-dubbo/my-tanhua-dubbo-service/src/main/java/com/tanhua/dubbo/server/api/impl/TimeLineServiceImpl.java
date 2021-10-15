@@ -23,6 +23,12 @@ public class TimeLineServiceImpl implements TimeLineService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    /**
+     * 异步执行，讲发表的动态写入好友的时间线表
+     * @param userId
+     * @param publishId
+     * @return
+     */
     @Override
     @Async //异步执行，原理：底层开一个线程去执行该方法
     public CompletableFuture<String> saveTimeLine(Long userId, ObjectId publishId) {

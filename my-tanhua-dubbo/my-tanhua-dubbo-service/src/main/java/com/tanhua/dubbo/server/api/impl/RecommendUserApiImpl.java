@@ -27,6 +27,11 @@ public class RecommendUserApiImpl implements RecommendUserApi {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    /**
+     * 通过userId查询与其匹配的最高score的RecommendUser信息
+     * @param userId
+     * @return
+     */
     @Override
     public RecommendUser queryWithMaxScore(Long userId) {
         Query query = Query.query(Criteria.where("toUserId").is(userId))

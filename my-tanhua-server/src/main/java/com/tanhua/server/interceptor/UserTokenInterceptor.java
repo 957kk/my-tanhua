@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class UserTokenInterceptor implements HandlerInterceptor {
 
-   @Autowired
+    @Autowired
     private UserService userService;
 
     @Override
@@ -34,9 +35,9 @@ public class UserTokenInterceptor implements HandlerInterceptor {
 
         //从请求头中获取token
         String token = request.getHeader("Authorization");
-        if(StrUtil.isNotEmpty(token)){
+        if (StrUtil.isNotEmpty(token)) {
             User user = this.userService.queryUserByToken(token);
-            if(user != null){
+            if (user != null) {
                 //token有效
                 //将User对象放入到ThreadLocal中
                 UserThreadLocal.set(user);

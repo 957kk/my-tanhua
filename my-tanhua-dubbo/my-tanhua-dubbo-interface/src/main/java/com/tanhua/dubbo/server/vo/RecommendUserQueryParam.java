@@ -4,10 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RecommendUserQueryParam {
+public class RecommendUserQueryParam implements Serializable {
+    private static final long serialVersionUID = -2105385689859184204L;
+
 
     private Integer page = 1; //当前页数
     private Integer pagesize = 10; //页尺寸

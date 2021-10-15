@@ -16,13 +16,29 @@ import java.util.List;
  **/
 public interface QuanZiService {
     PageResult queryPublishList(Integer page, Integer pageSize);
-   void fillUserInfoToQuanZiVo(UserInfo userInfo, QuanZiVo quanZiVo);
+
+    void fillUserInfoToQuanZiVo(UserInfo userInfo, QuanZiVo quanZiVo);
+
     List<QuanZiVo> fillQuanZiVo(List<Publish> records);
+
+    /**
+     * 发布保存圈子信息
+     * @param textContent
+     * @param location
+     * @param latitude
+     * @param longitude
+     * @param multipartFile
+     * @return
+     */
     String savePublish(String textContent,
                        String location,
                        String latitude,
                        String longitude,
                        MultipartFile[] multipartFile);
+
     PageResult queryRecommendPublishList(Integer page, Integer pageSize);
 
+    Long likeComment(String publishId);
+
+    Long disLikeComment(String publishId);
 }

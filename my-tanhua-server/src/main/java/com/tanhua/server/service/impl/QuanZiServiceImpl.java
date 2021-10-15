@@ -8,6 +8,7 @@ import com.tanhua.common.pojo.UserInfo;
 import com.tanhua.common.utils.RelativeDateFormat;
 import com.tanhua.common.utils.UserThreadLocal;
 import com.tanhua.dubbo.server.api.QuanZiApi;
+import com.tanhua.dubbo.server.enums.CommentType;
 import com.tanhua.dubbo.server.pojo.Publish;
 import com.tanhua.dubbo.server.vo.PageInfo;
 import com.tanhua.dubbo.server.vo.PageResult;
@@ -184,5 +185,32 @@ public class QuanZiServiceImpl implements QuanZiService {
 
         pageResult.setItems(this.fillQuanZiVo(records));
         return pageResult;
+    }
+
+    /**
+     * 是否已点赞并且返回本条的点赞数量
+     * @param publishId
+     * @return
+     */
+    @Override
+    public Long likeComment(String publishId) {
+        User user = UserThreadLocal.get();
+        Boolean result = this.quanZiApi.likeComment(user.getId(), publishId);
+        if (result) {
+            //查询点赞数
+            return this.quanZiApi.queryCount(publishId, CommentType.LIKE);
+        }
+        return null;
+    }
+
+    @Override
+    public Long disLikeComment(String publishId) {
+        User user = UserThreadLocal.get();
+        Boolean result = this.quanZiApi.disLikeComment(user.getId(), publishId);
+        if (result) {
+            //查询点赞数
+            return this.quanZiApi.queryCount(publishId, CommentType.LIKE);
+        }
+        return null;
     }
 }
