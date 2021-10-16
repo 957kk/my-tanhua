@@ -73,4 +73,12 @@ public interface QuanZiApi {
     PageInfo<Comment> queryCommentList(String publishId, Integer page, Integer pageSize);
 
     boolean queryUserIsLike(Long id, String id1);
+
+    /**
+     * 查询评论数
+     *
+     * @param publishId
+     * @return
+     */
+    Long queryCommentCount(String publishId);
 }

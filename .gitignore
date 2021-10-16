@@ -1,1 +1,6 @@
 /my-tanhua-sso/target/
+/my-tanhua-dubbo/my-tanhua-dubbo-service/target/
+/my-tanhua-server/target/
+/my-tanhua-dubbo/my-tanhua-dubbo-interface/target/
+/my-tanhua-common/target/
+/.idea/

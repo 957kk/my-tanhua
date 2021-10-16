@@ -506,4 +506,9 @@ public class QuanZiApiImpl implements QuanZiApi {
 
         return true;
     }
+
+    @Override
+    public Long queryCommentCount(String publishId) {
+        return this.queryCommentCount(publishId, CommentType.COMMENT);
+    }
 }
